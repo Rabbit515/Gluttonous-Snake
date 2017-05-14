@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>贪吃蛇</title>
+	<style type="text/css">
+	*{
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+	.wrapper{
+		position: absolute;
+		left:200px;
+		top:100px;
+		width:600px;
+		height:400px;
+		border:5px solid black;
+		background-image: url(草原.jpg);
+		background-repeat: no-repeat;
+		background-size:600px 400px;
+		/*overflow: hidden;*/
+	}
+	.snake{
+		/*float: left;*/
+		display: block;
+		position: absolute;
+		left:100px;
+		top:50px;
+		width:25px;
+		height:25px;
+		background-color: red;
+		border-radius: 50%;
+		text-align: center;
+		color:black;
+		font-weight: bold;
+	}
+	.demo{
+		display: block;
+		position: absolute;
+		top:50px;
+		left:200px;
+		width:25px;
+		height:25px;
+		border-radius: 50%;
+		background-color: green;
+	}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="demo"></div>
+		<div class="snake">头</div>
+		
+	</div>
+
+	<script type="text/javascript">
+
+			var oDiv = document.getElementsByTagName('div')[0];
+			var oDemo = document.getElementsByTagName('div')[1];
+			var oSnake = document.getElementsByTagName('div')[2];
+			var snakeBody = document.getElementsByClassName('snake');
+			var len = snakeBody.length;
+			var timer = null;
+			var iSpeed = 25;
+
+			//键盘监听
+			document.onkeydown = function (e) {
+				clearInterval(timer);
+				if(e.which == 38){
+					moveUp();	
+				}else if (e.which == 40){
+					moveDown();
+				}else if (e.which == 37){
+					moveLeft();
+				}else if (e.which == 39){
+					moveRight();
+				}
+			}
+
+			//改变随意点的封装函数
+			function move(){
+				if(Math.abs(oSnake.offsetLeft - oDemo.offsetLeft) < 8 && Math.abs(oSnake.offsetTop - oDemo.offsetTop) < 8){
+					oDemo.style.display = 'none';
+					oDemo.style.display = 'block';
+					oDemo.style.left =  25 * Math.ceil( Math.random () * 10 ) + 'px';
+					oDemo.style.top = 25 * Math.floor( Math.random () * 10 )  + 'px';
+					var oD = document.createElement('div');
+					oD.className = 'snake';
+					oDiv.appendChild(oD);		
+				}
+			}
+
+			//改变蛇身位置
+			function change(){
+				var len = snakeBody.length;
+				for(var i = len - 1; i > 0 ; i --){
+					snakeBody[i].style.top = parseInt(snakeBody[i - 1].style.top)  +'px';
+            		snakeBody[i].style.left = parseInt(snakeBody[i - 1].style.left)  + 'px';
+				}
+			}
+
+			//碰到边界，game over
+			function meet(){
+				if(oSnake.offsetTop > 375){
+					clearInterval(timer);
+					alert('呵呵，玩死了!');
+				
+				}else if(oSnake.offsetLeft > 575){
+					clearInterval(timer);
+					alert('呵呵，玩死了!');
+				}else if(oSnake.offsetTop < 0){
+					clearInterval(timer);
+					alert('呵呵，玩死了!');
+				}else if(oSnake.offsetLeft < 0){
+					clearInterval(timer);
+					alert('呵呵，玩死了!');
+				}
+				// }else if(oSnake.offsetLeft === snakeBody[i].offsetLeft && oSnake.offsetTop === snakeBody[i].offsetTop){
+				// 	clearInterval(timer);
+				// 	alert('呵呵，玩死了!');
+				// }
+
+			}
+			
+			//上下左右相应的封装函数
+			function moveUp () {
+				timer = setInterval (function () {
+					move();
+					change();
+					oSnake.style.top = oSnake.offsetTop - iSpeed + 'px';
+					meet();	
+				},300);	
+			}
+			function moveDown () {
+				timer = setInterval (function () {
+					move();
+					change();
+					oSnake.style.top = oSnake.offsetTop + iSpeed + 'px';
+					meet();
+					
+				},300);
+			}
+			function moveLeft () {
+				timer = setInterval (function () {
+					move();
+					change();
+					oSnake.style.left = oSnake.offsetLeft - iSpeed + 'px';
+					meet();
+					
+				},300);
+			}
+			function moveRight () {
+				timer = setInterval (function () {
+					move();
+					change();
+					oSnake.style.left = oSnake.offsetLeft + iSpeed + 'px';				
+					meet();
+				},300);
+			}
+
+	</script>
+
+</body>
+</html>
